@@ -1,17 +1,24 @@
 import pygame
 from pygame.locals import *
 from levels import levels, next_level
+from maze_generator import generate_maze
 
-# Inicializar Juego
+# Inicializar Pygame
 pygame.init()
 
-# Configuración de los Nieveles
+# Configuración de la pantalla
 TILE_SIZE = 40
-maze_width, maze_height = 10, 10  # Tamaño del laberinto
+maze_width, maze_height = 20, 20  # Tamaño del laberinto
 SCREEN_WIDTH = maze_width * TILE_SIZE
 SCREEN_HEIGHT = maze_height * TILE_SIZE
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Juego de Laberinto')
+
+# Cargar texturas
+wall_texture = pygame.image.load('assets/images/stone_wall02.png')
+player_texture = pygame.image.load('assets/images/idle_1.png')
+wall_texture = pygame.transform.scale(wall_texture, (TILE_SIZE, TILE_SIZE))
+player_texture = pygame.transform.scale(player_texture, (TILE_SIZE, TILE_SIZE))
 
 # Definir colores
 WHITE = (255, 255, 255)
@@ -19,9 +26,8 @@ BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
-# Definir el nivel y el laberinto inicial
-current_level = 0
-maze = levels[current_level]
+# Generar el primer laberinto
+maze = generate_maze(maze_width, maze_height)
 
 # Posición inicial del jugador
 player_pos = [1, 1]
@@ -37,8 +43,13 @@ game_state = START_SCREEN
 def draw_maze(screen, maze):
     for y, row in enumerate(maze):
         for x, tile in enumerate(row):
-            color = WHITE if tile == 0 else BLACK
-            pygame.draw.rect(screen, color, pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+            if tile == 1:
+                screen.blit(wall_texture, (x * TILE_SIZE, y * TILE_SIZE))
+            else:
+                pygame.draw.rect(screen, WHITE, pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+    
+    # Dibujar borde alrededor del laberinto
+    pygame.draw.rect(screen, BLACK, pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT), 5)
 
 # Función para mover al jugador
 def move_player(pos, direction):
@@ -115,14 +126,9 @@ while running:
 
                 # Comprueba si el jugador ha llegado a la salida
                 if check_exit(player_pos, exit_pos):
-                    current_level = next_level(current_level, levels)
-                    if current_level is not None:
-                        maze = levels[current_level]
-                        player_pos = [1, 1]  # Restablece la posición del jugador
-                        exit_pos = [maze_width - 2, maze_height - 2]  # Restablece la posición de la salida
-                    else:
-                        # El jugador ha completado todos los niveles
-                        game_state = END_SCREEN
+                    maze = generate_maze(maze_width, maze_height)
+                    player_pos = [1, 1]  # Restablece la posición del jugador
+                    exit_pos = [maze_width - 2, maze_height - 2]  # Restablece la posición de la salida
 
         elif event.type == MOUSEBUTTONDOWN:
             if game_state == START_SCREEN:
@@ -144,7 +150,7 @@ while running:
         screen.fill(WHITE)
         draw_maze(screen, maze)
         pygame.draw.rect(screen, GREEN, pygame.Rect(exit_pos[0] * TILE_SIZE, exit_pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE))  # Dibuja la salida
-        pygame.draw.rect(screen, BLUE, pygame.Rect(player_pos[0] * TILE_SIZE, player_pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE))  # Dibuja el jugador
+        screen.blit(player_texture, (player_pos[0] * TILE_SIZE, player_pos[1] * TILE_SIZE))  # Dibuja el jugador
         pygame.display.flip()
     elif game_state == END_SCREEN:
         show_end_screen()

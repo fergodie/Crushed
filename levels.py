@@ -7,4 +7,4 @@ def next_level(current_level, levels):
         return None
 
 # Inicializa niveles con laberintos generados
-levels = [generate_maze(10, 10) for _ in range(5)]  # Genera 5 niveles
+levels = [generate_maze(20, 20) for _ in range(5)]  # Genera 5 niveles
