@@ -7,6 +7,7 @@ Antes que nada, es un proyecto que invito a cualqueira pueda usar ya que creo qu
 Juego de Laberinto Crushed
 
 ¡Bienvenido al Juego de Laberinto! Este es un juego simple pero entretenido que enseña habilidades básicas de programación en Python utilizando la biblioteca Pygame. El objetivo del juego es guiar a un personaje a través de un laberinto para llegar a la salida. A medida que avanzas, se generan nuevos laberintos aleatorios.
+
 Tabla de Contenidos
 
     Instalación
