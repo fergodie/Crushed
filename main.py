@@ -8,7 +8,7 @@ pygame.init()
 
 # Configuración de la pantalla
 TILE_SIZE = 40
-maze_width, maze_height = 20, 20  # Tamaño del laberinto
+maze_width, maze_height = 10, 10  # Tamaño del laberinto
 SCREEN_WIDTH = maze_width * TILE_SIZE
 SCREEN_HEIGHT = maze_height * TILE_SIZE
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
